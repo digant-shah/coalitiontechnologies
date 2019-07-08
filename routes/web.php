@@ -13,11 +13,23 @@
 
 Route::group(['prefix' => ''], function () {
     Route::get('create', function () {
+
+        return view('welcome');
+    });
+    Route::get('/', function () {
+
         return view('welcome');
     });
     Route::group(['prefix' => 'products'], function () {
+        Route::put('', 'ProductController@create')->name('products.create');
         Route::get('create', function () {
-            return view('create');
-        });
+            $data['products'] = [];
+            $productPath = 'products.json';
+            if (file_exists($productPath)) {
+                $data['products'] = explode('|', file_get_contents($productPath));
+            }
+
+            return view('create', $data);
+        })->name('products');
     });
 });
